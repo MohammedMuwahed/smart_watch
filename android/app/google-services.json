@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "275982759255",
+    "project_id": "smartwatch-university-project",
+    "storage_bucket": "smartwatch-university-project.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:275982759255:android:570861e8e88788bbc43a12",
+        "android_client_info": {
+          "package_name": "com.example.smart_watch"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAP_M_H1PhWzxRjiO5p5PGJNTicHiJFxqY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:275982759255:android:ee5855a730638983c43a12",
+        "android_client_info": {
+          "package_name": "responsibleSmartWatch.com.smartwatch"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAP_M_H1PhWzxRjiO5p5PGJNTicHiJFxqY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
