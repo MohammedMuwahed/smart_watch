@@ -1,54 +1,64 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_watch/routes/index.dart';
-import 'package:smart_watch/ui/home/home_page.dart';
-import 'package:smart_watch/ui/register/register_page.dart';
-import 'package:smart_watch/ui/verify/verify_email.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_watch/firebase_options.dart';
+import 'package:smart_watch/services/api_service.dart';
+import 'package:smart_watch/utils/index.dart';
+import 'package:smart_watch/services/auth_service.dart';
+import 'package:smart_watch/providers/sleep_provider.dart';
+import 'package:smart_watch/ui/login_page.dart';
+import 'package:smart_watch/ui/home_page.dart';
+import 'package:smart_watch/ui/verify_email_page.dart';
 
-import 'firebase_options.dart';
-
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   runApp(
-    MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: const HomePage(),
-      routes: {
-        loginRoute: (context) => const LoginView(),
-        registerRoute: (context) => const RegisterView(),
-        verifyEmailRoute: (context) => const VerifyEmailView(),
-      },
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => SleepProvider()),
+        Provider(create: (_) => AuthService()),
+        Provider(create: (_) => ApiService()),
+      ],
+      child: const SmartSleepApp(),
     ),
   );
 }
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class SmartSleepApp extends StatelessWidget {
+  const SmartSleepApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
-      ),
+    return MaterialApp(
+      title: 'Smart Sleep Control',
+      theme: AppTheme.darkTheme,
+      debugShowCheckedModeBanner: false,
+      home: const AuthGate(), // 👈 This decides the start page automatically
+    );
+  }
+}
+
+/// 🧠 AuthGate Widget
+class AuthGate extends StatelessWidget {
+  const AuthGate({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final auth = context.read<AuthService>();
+
+    return StreamBuilder(
+      stream: auth.authStateChanges,
       builder: (context, snapshot) {
-        switch (snapshot.connectionState) {
-          case ConnectionState.done:
-            final user = FirebaseAuth.instance.currentUser;
-            if (user != null) {
-              if (user.emailVerified) {
-                return const NotesView();
-              } else {
-                return const VerifyEmailView();
-              }
-            } else {
-              return const LoginView();
-            }
-          default:
-            return const CircularProgressIndicator();
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(body: Center(child: CircularProgressIndicator()));
         }
+
+        final user = snapshot.data;
+        if (user == null) return const LoginPage();
+        if (!user.emailVerified) return const VerifyEmailPage();
+        return const HomePage();
       },
     );
   }
