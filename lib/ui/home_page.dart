@@ -24,7 +24,7 @@ class _HomePageState extends State<HomePage> {
     Future.microtask(() => _checkStatus());
 
     // 2. Auto-refresh every 5 minutes
-    _timer = Timer.periodic(const Duration(minutes: 5), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 30), (timer) {
       _checkStatus();
     });
   }
@@ -60,6 +60,21 @@ class _HomePageState extends State<HomePage> {
     // Listen to the provider for changes
     final sleepProvider = context.watch<SleepProvider>();
     final bool isSleeping = sleepProvider.isSleeping;
+    final settings = sleepProvider.settings;
+
+    // Logic to determine text based on Settings
+    String lightsStatus;
+    String curtainsStatus;
+
+    if (isSleeping) {
+      // When sleeping: check "Auto Lights Off" and "Auto Curtain Close" settings
+      lightsStatus = settings.autoLightsOff ? "OFF" : "ON";
+      curtainsStatus = settings.autoCurtainClose ? "CLOSED" : "OPEN";
+    } else {
+      // When awake: check "Lights On Wake" and "Curtain Open Wake" settings
+      lightsStatus = settings.lightsOnWake ? "ON" : "OFF";
+      curtainsStatus = settings.curtainOpenWake ? "OPEN" : "CLOSED";
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -126,21 +141,10 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
 
-              const SizedBox(height: 10),
-
-              Text(
-                isSleeping ? "Lights: OFF | Curtains: CLOSED" : "Lights: ON | Curtains: OPEN",
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey[700],
-                ),
-              ),
-              // --- STATUS UI END ---
-
               const SizedBox(height: 50),
 
               Text(
-                "Auto-refreshes every 5 mins",
+                "Auto-refreshes every 30 seconds",
                 style: TextStyle(color: Colors.grey[500]),
               ),
             ],
