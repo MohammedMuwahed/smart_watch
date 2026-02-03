@@ -24,7 +24,7 @@ class _HomePageState extends State<HomePage> {
     Future.microtask(() => _checkStatus());
 
     // 2. Auto-refresh every 5 minutes
-    _timer = Timer.periodic(const Duration(seconds: 30), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
       _checkStatus();
     });
   }
@@ -144,7 +144,7 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 50),
 
               Text(
-                "Auto-refreshes every 30 seconds",
+                "Auto-refreshes every 5 seconds",
                 style: TextStyle(color: Colors.grey[500]),
               ),
             ],

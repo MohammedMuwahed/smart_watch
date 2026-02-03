@@ -1,1 +1,39 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"smartwatch-university-project","appId":"1:275982759255:android:570861e8e88788bbc43a12","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"smartwatch-university-project","configurations":{"android":"1:275982759255:android:570861e8e88788bbc43a12","ios":"1:275982759255:ios:8b51d4daae4c6066c43a12","macos":"1:275982759255:ios:8b51d4daae4c6066c43a12","web":"1:275982759255:web:fb0022310f0e5534c43a12","windows":"1:275982759255:web:bbafb2a60f9e4601c43a12"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "smartwatch-university-project",
+          "appId": "1:275982759255:android:570861e8e88788bbc43a12",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "smartwatch-university-project",
+          "configurations": {
+            "android": "1:275982759255:android:570861e8e88788bbc43a12",
+            "ios": "1:275982759255:ios:8b51d4daae4c6066c43a12",
+            "macos": "1:275982759255:ios:8b51d4daae4c6066c43a12",
+            "web": "1:275982759255:web:fb0022310f0e5534c43a12",
+            "windows": "1:275982759255:web:bbafb2a60f9e4601c43a12"
+          }
+        }
+      }
+    }
+  },
+  "hosting": {
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
