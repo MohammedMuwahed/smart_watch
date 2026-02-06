@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../models/settings_model.dart';
+import 'package:smart_watch/models/settings_model.dart';
 
 class SleepProvider extends ChangeNotifier {
   final _firestore = FirebaseFirestore.instance;
