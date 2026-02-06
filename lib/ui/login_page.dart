@@ -30,13 +30,22 @@ class _LoginPageState extends State<LoginPage> {
             email: _email,
             password: _password,
           );
+
       if (user != null && mounted) {
-        Navigator.pushReplacementNamed(context, AppRoutes.home);
+        // FIX: Check if the email is verified before going to Home
+        if (user.emailVerified) {
+          Navigator.pushReplacementNamed(context, AppRoutes.home);
+        } else {
+          // If not verified, send them to the verification instructions
+          Navigator.pushReplacementNamed(context, AppRoutes.verifyEmail);
+        }
       }
     } catch (e) {
-      setState(() {
-        _error = "Invalid email or password";
-      });
+      if (mounted) {
+        setState(() {
+          _error = "Invalid email or password";
+        });
+      }
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -177,10 +186,7 @@ class _LoginPageState extends State<LoginPage> {
                     const SizedBox(height: 20),
 
                     TextButton(
-                      onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => const RegisterPage()),
-                      ),
+                      onPressed: () => Navigator.pushNamed(context, AppRoutes.register),
                       child: RichText(
                         text: TextSpan(
                           style: const TextStyle(color: Colors.grey, fontSize: 14),

@@ -43,11 +43,16 @@ class _RegisterPageState extends State<RegisterPage> {
           );
 
       if (user != null && mounted) {
-        // 2. Send the email
-        await context.read<AuthService>().sendEmailVerification();
+        // 2. Try to Send the email
+        // We wrap this in its own try-catch so it doesn't stop the flow
+        try {
+          await context.read<AuthService>().sendEmailVerification();
+        } catch (emailError) {
+          debugPrint("Email trigger failed: $emailError");
+          // Ignore this error, the user can click "Resend" on the next page
+        }
 
-        // 3. FORCE Navigation to verify page and clear the "Back" history
-        // This prevents the user from going back to the Register page.
+        // 3. FORCE Navigation to verify page regardless of email success
         if (mounted) {
           Navigator.pushNamedAndRemoveUntil(
             context,
@@ -57,10 +62,10 @@ class _RegisterPageState extends State<RegisterPage> {
         }
       }
     } catch (e) {
-      // 4. Only show error if we are still on this page and registration truly failed
+      // 4. This catch block now ONLY catches Registration errors (like email in use)
       if (mounted) {
         setState(() {
-          _error = e.toString().contains('email-already-in-use') ? 'Email is already registered' : 'Registration failed. Try again.';
+          _error = e.toString().contains('email-already-in-use') ? 'Email is already registered. Please Login.' : 'Registration failed. Try again.';
         });
       }
     } finally {
@@ -93,10 +98,7 @@ class _RegisterPageState extends State<RegisterPage> {
       appBar: AppBar(
         backgroundColor: Colors.blue.shade800,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
-        ),
+        automaticallyImplyLeading: false, // REMOVED BACK BUTTON HERE
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -228,8 +230,9 @@ class _RegisterPageState extends State<RegisterPage> {
 
                     const SizedBox(height: 20),
 
+                    // Back to Login Button
                     TextButton(
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () => Navigator.pushNamed(context, AppRoutes.login),
                       child: RichText(
                         text: TextSpan(
                           style: const TextStyle(color: Colors.grey, fontSize: 14),
