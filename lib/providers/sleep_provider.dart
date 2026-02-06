@@ -51,13 +51,23 @@ class SleepProvider extends ChangeNotifier {
 
   /// Toggle sleep state
   Future<void> setSleeping(bool value) async {
-    if (_uid == null) return;
     _isSleeping = value;
-    await _firestore.collection('sleep_states').doc(_docId).update({
-      'isSleeping': value,
-    });
-    _performActionsBasedOnState();
     notifyListeners();
+
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      try {
+        // ⚠️ FIX: Use .set() with SetOptions(merge: true) instead of .update()
+        // .update() crashes if the document doesn't exist.
+        // .set() creates it if it's missing.
+        await FirebaseFirestore.instance.collection('sleep_states').doc('user_${user.uid}').set({
+          'isSleeping': value,
+          'timestamp': FieldValue.serverTimestamp(),
+        }, SetOptions(merge: true));
+      } catch (e) {
+        print("Error updating Firestore: $e");
+      }
+    }
   }
 
   /// Update single automation preference

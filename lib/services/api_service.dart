@@ -1,67 +1,58 @@
 import 'dart:convert';
+import 'dart:developer' as developer; // Import developer for logging
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  // ⚠️ REPLACE with your PC's IP if using a real phone (e.g., http://192.168.1.15:8000)
-  // Use http://10.0.2.2:8000 if using Android Emulator
-  // Use http://127.0.0.1:8000 if using iOS Simulator
+  // ⚠️ CRITICAL FIX:
+  // - If using Android Emulator: Use 'http://10.0.2.2:8000'
+  // - If using Real Device: Use your PC's IP (e.g., 'http://192.168.1.15:8000')
+  // - '0.0.0.0' WILL NOT WORK on the emulator or phone.
   static const String baseUrl = 'http://10.0.2.2:8000';
+  // static const String baseUrl = 'https://smartwatch-university-project.web.app';
 
   // --- Device Control ---
 
-  Future<bool> toggleLights(bool turnOn) async {
-    final action = turnOn ? 'on' : 'off';
-    // Your API expects a query parameter: /device/lights?action=on
-    final url = Uri.parse('$baseUrl/device/lights?action=$action');
+  Future<bool> isSleeping() async {
+    // Ensure this path matches your Python code exactly (e.g. just '/' or '/state')
+    final url = Uri.parse('$baseUrl/state/is-sleeping');
 
     try {
-      final response = await http.post(url);
+      final response = await http.get(url);
+
+      // Use developer.log instead of print
+      developer.log("📥 Raw Server Response Code: ${response.statusCode}", name: 'ApiService');
+      developer.log("📦 Raw Server Body: ${response.body}", name: 'ApiService');
+
       if (response.statusCode == 200) {
-        print("Lights toggled: $action");
-        return true;
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        final bool status = data['isSleeping'] ?? false;
+
+        developer.log("Fetched Sleep Status: $status", name: 'ApiService');
+        return status;
       } else {
-        print("Failed to toggle lights: ${response.body}");
+        developer.log("Server Error: ${response.statusCode}", name: 'ApiService', error: response.body);
         return false;
       }
     } catch (e) {
-      print("Error connecting to API: $e");
+      developer.log("Error connecting to API", name: 'ApiService', error: e);
       return false;
     }
   }
 
-  Future<bool> openCurtains() async {
-    // Your API expects query parameter: /device/curtain?action=open
-    final url = Uri.parse('$baseUrl/device/curtain?action=open');
+  Future<void> sleepingSetting(String device, String setting, bool value) async {
+    final url = Uri.parse('$baseUrl/device/update-setting');
 
     try {
-      final response = await http.post(url);
-      if (response.statusCode == 200) {
-        print("Curtains opened");
-        return true;
-      }
-      return false;
-    } catch (e) {
-      print("Error: $e");
-      return false;
-    }
-  }
-
-  // --- Sleep State Updates ---
-
-  Future<void> updateSleepState(String state) async {
-    // Your API expects JSON body: { "state": "sleeping" }
-    final url = Uri.parse('$baseUrl/state/update');
-
-    try {
-      final response = await http.post(url, headers: {"Content-Type": "application/json"}, body: jsonEncode({"state": state}));
+      final response = await http.post(url,
+          headers: {"Content-Type": "application/json"}, body: jsonEncode({"device": device, "setting": setting, "value": value}));
 
       if (response.statusCode == 200) {
-        print("Server state updated to: $state");
+        developer.log("Server device setting updated to: $setting to $value", name: 'ApiService');
       } else {
-        print("Server rejected state update: ${response.body}");
+        developer.log("Server rejected device setting update: ${response.body}", name: 'ApiService');
       }
     } catch (e) {
-      print("Error updating state: $e");
+      developer.log("Error in sleepingSetting", name: 'ApiService', error: e);
     }
   }
 }
