@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../models/settings_model.dart';
+import 'package:smart_watch/models/settings_model.dart';
 
 class SleepProvider extends ChangeNotifier {
   final _firestore = FirebaseFirestore.instance;
@@ -93,17 +93,6 @@ class SleepProvider extends ChangeNotifier {
       'settings': _settings.toMap(),
     });
     notifyListeners();
-  }
-
-  /// Smart-home simulation logic
-  void _performActionsBasedOnState() {
-    if (_isSleeping) {
-      if (_settings.autoCurtainClose) debugPrint("🪟 Curtains closing...");
-      if (_settings.autoLightsOff) debugPrint("💤 Lights off");
-    } else {
-      if (_settings.lightsOnWake) debugPrint("💡 Lights on");
-      if (_settings.curtainOpenWake) debugPrint("🌅 Curtains opening...");
-    }
   }
 
   void clear() {

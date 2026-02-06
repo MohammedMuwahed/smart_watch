@@ -3,12 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_watch/firebase_options.dart';
 import 'package:smart_watch/services/api_service.dart';
-import 'package:smart_watch/utils/index.dart';
 import 'package:smart_watch/services/auth_service.dart';
 import 'package:smart_watch/providers/sleep_provider.dart';
-import 'package:smart_watch/ui/login_page.dart';
-import 'package:smart_watch/ui/home_page.dart';
-import 'package:smart_watch/ui/verify_email_page.dart';
 import 'routes/app_routes.dart';
 
 void main() async {

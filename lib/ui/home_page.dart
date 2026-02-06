@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/sleep_provider.dart';
-import '../services/api_service.dart';
-import '../services/auth_service.dart';
-import '../routes/app_routes.dart';
+import 'package:smart_watch/providers/sleep_provider.dart';
+import 'package:smart_watch/services/api_service.dart';
+import 'package:smart_watch/services/auth_service.dart';
+import 'package:smart_watch/routes/app_routes.dart';
 import 'settings_page.dart';
 
 class HomePage extends StatefulWidget {
