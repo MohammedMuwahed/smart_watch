@@ -18,7 +18,6 @@ class SleepProvider extends ChangeNotifier {
   String? get _uid => _auth.currentUser?.uid;
   String get _docId => "user_${_uid ?? 'anonymous'}";
 
-  /// Initialize Firestore listener
   void init() {
     if (_uid == null) return;
 
@@ -49,7 +48,6 @@ class SleepProvider extends ChangeNotifier {
     });
   }
 
-  /// Toggle sleep state
   Future<void> setSleeping(bool value) async {
     _isSleeping = value;
     notifyListeners();
@@ -57,9 +55,6 @@ class SleepProvider extends ChangeNotifier {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       try {
-        // ⚠️ FIX: Use .set() with SetOptions(merge: true) instead of .update()
-        // .update() crashes if the document doesn't exist.
-        // .set() creates it if it's missing.
         await FirebaseFirestore.instance.collection('sleep_states').doc('user_${user.uid}').set({
           'isSleeping': value,
           'timestamp': FieldValue.serverTimestamp(),
@@ -70,7 +65,6 @@ class SleepProvider extends ChangeNotifier {
     }
   }
 
-  /// Update single automation preference
   Future<void> updateSingleSetting(String key, bool value) async {
     if (_uid == null) return;
 
@@ -93,17 +87,6 @@ class SleepProvider extends ChangeNotifier {
       'settings': _settings.toMap(),
     });
     notifyListeners();
-  }
-
-  /// Smart-home simulation logic
-  void _performActionsBasedOnState() {
-    if (_isSleeping) {
-      if (_settings.autoCurtainClose) debugPrint("🪟 Curtains closing...");
-      if (_settings.autoLightsOff) debugPrint("💤 Lights off");
-    } else {
-      if (_settings.lightsOnWake) debugPrint("💡 Lights on");
-      if (_settings.curtainOpenWake) debugPrint("🌅 Curtains opening...");
-    }
   }
 
   void clear() {

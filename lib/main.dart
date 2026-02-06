@@ -30,9 +30,9 @@ class SmartSleepApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Smart Sleep Control',
-      theme: AppTheme.darkTheme,
       debugShowCheckedModeBanner: false,
-      home: const AuthGate(), // 👈 This decides the start page automatically
+      initialRoute: AppRoutes.login,
+      routes: AppRoutes.routes,
     );
   }
 }

@@ -13,13 +13,11 @@ class ApiService {
   // --- Device Control ---
 
   Future<bool> isSleeping() async {
-    // Ensure this path matches your Python code exactly (e.g. just '/' or '/state')
     final url = Uri.parse('$baseUrl/state/is-sleeping');
 
     try {
       final response = await http.get(url);
 
-      // Use developer.log instead of print
       developer.log("📥 Raw Server Response Code: ${response.statusCode}", name: 'ApiService');
       developer.log("📦 Raw Server Body: ${response.body}", name: 'ApiService');
 
