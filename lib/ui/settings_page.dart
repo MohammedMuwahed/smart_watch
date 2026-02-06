@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/sleep_provider.dart';
-import '../services/api_service.dart'; // Import ApiService
+import 'package:smart_watch/providers/sleep_provider.dart';
+import 'package:smart_watch/services/index.dart';
+
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
