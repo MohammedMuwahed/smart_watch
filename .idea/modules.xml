@@ -2,6 +2,30 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/android.iml" filepath="$PROJECT_DIR$/.idea/modules/android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/android.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/android.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/android.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/android.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/android.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/android.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/android.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/android.app.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/564683295/android.cloud_firestore.iml" filepath="$PROJECT_DIR$/.idea/modules/564683295/android.cloud_firestore.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/564683295/android.cloud_firestore.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/564683295/android.cloud_firestore.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/564683295/android.cloud_firestore.main.iml" filepath="$PROJECT_DIR$/.idea/modules/564683295/android.cloud_firestore.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/564683295/android.cloud_firestore.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/564683295/android.cloud_firestore.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1120376040/android.firebase_analytics.iml" filepath="$PROJECT_DIR$/.idea/modules/-1120376040/android.firebase_analytics.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1120376040/android.firebase_analytics.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/-1120376040/android.firebase_analytics.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1120376040/android.firebase_analytics.main.iml" filepath="$PROJECT_DIR$/.idea/modules/-1120376040/android.firebase_analytics.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1120376040/android.firebase_analytics.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/-1120376040/android.firebase_analytics.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1636400160/android.firebase_auth.iml" filepath="$PROJECT_DIR$/.idea/modules/-1636400160/android.firebase_auth.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1636400160/android.firebase_auth.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/-1636400160/android.firebase_auth.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1636400160/android.firebase_auth.main.iml" filepath="$PROJECT_DIR$/.idea/modules/-1636400160/android.firebase_auth.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1636400160/android.firebase_auth.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/-1636400160/android.firebase_auth.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1769779115/android.firebase_core.iml" filepath="$PROJECT_DIR$/.idea/modules/-1769779115/android.firebase_core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1769779115/android.firebase_core.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/-1769779115/android.firebase_core.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1769779115/android.firebase_core.main.iml" filepath="$PROJECT_DIR$/.idea/modules/-1769779115/android.firebase_core.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1769779115/android.firebase_core.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/-1769779115/android.firebase_core.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/290806641/gradle.iml" filepath="$PROJECT_DIR$/.idea/modules/290806641/gradle.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/290806641/gradle.main.iml" filepath="$PROJECT_DIR$/.idea/modules/290806641/gradle.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/290806641/gradle.test.iml" filepath="$PROJECT_DIR$/.idea/modules/290806641/gradle.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/smart_watch.iml" filepath="$PROJECT_DIR$/.idea/smart_watch.iml" />
     </modules>
   </component>
