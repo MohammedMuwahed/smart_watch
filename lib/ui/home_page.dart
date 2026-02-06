@@ -45,10 +45,6 @@ class _HomePageState extends State<HomePage> {
     final bool isSleeping = sleepProvider.isSleeping;
     final settings = sleepProvider.settings;
 
-    // Device status logic
-    String lightsStatus = isSleeping ? (settings.autoLightsOff ? "OFF" : "ON") : (settings.lightsOnWake ? "ON" : "OFF");
-    String curtainsStatus = isSleeping ? (settings.autoCurtainClose ? "CLOSED" : "OPEN") : (settings.curtainOpenWake ? "OPEN" : "CLOSED");
-
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -60,7 +56,6 @@ class _HomePageState extends State<HomePage> {
           IconButton(icon: const Icon(Icons.refresh, color: Colors.white), onPressed: _checkStatus),
         ],
       ),
-      // --- ADDED SIDE MENU (DRAWER) ---
       drawer: Drawer(
         child: Column(
           children: [
@@ -152,7 +147,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               Text(
-                isSleeping ? "User is Sleeping" : "User is Awake",
+                isSleeping ? "Sleeping" : "Awake",
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 32,
@@ -160,30 +155,6 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               const Spacer(),
-
-              // Device Status Cards
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  children: [
-                    _buildStatusCard(
-                      "Lights",
-                      lightsStatus,
-                      lightsStatus == "ON" ? Icons.lightbulb : Icons.lightbulb_outline,
-                      lightsStatus == "ON" ? Colors.yellow : Colors.white54,
-                    ),
-                    const SizedBox(width: 15),
-                    _buildStatusCard(
-                      "Curtains",
-                      curtainsStatus,
-                      curtainsStatus == "OPEN" ? Icons.curtains : Icons.curtains_closed,
-                      curtainsStatus == "OPEN" ? Colors.lightBlueAccent : Colors.white54,
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 40),
-
               const Text(
                 "System monitoring active",
                 style: TextStyle(color: Colors.white38, fontSize: 12),
@@ -191,31 +162,6 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 20),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildStatusCard(String title, String status, IconData icon, Color iconColor) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.white10),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(icon, color: iconColor, size: 30),
-            const SizedBox(height: 15),
-            Text(title, style: const TextStyle(color: Colors.white70, fontSize: 14)),
-            Text(
-              status,
-              style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-          ],
         ),
       ),
     );
