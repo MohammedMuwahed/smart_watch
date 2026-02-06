@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_watch/providers/sleep_provider.dart';
-import 'package:smart_watch/services/api_service.dart';
-import 'package:smart_watch/services/auth_service.dart';
-import 'package:smart_watch/routes/app_routes.dart';
+import '../providers/sleep_provider.dart';
+import '../services/api_service.dart';
+import '../services/auth_service.dart';
+import '../routes/app_routes.dart';
 import 'settings_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -20,7 +20,10 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    // 1. Check status immediately on load
     Future.microtask(() => _checkStatus());
+
+    // 2. Auto-refresh every 5 minutes
     _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
       _checkStatus();
     });
@@ -35,131 +38,115 @@ class _HomePageState extends State<HomePage> {
   Future<void> _checkStatus() async {
     final apiService = context.read<ApiService>();
     final sleepProvider = context.read<SleepProvider>();
+
+    // Fetch from API: true = Sleeping, false = Awake
     bool currentStatus = await apiService.isSleeping();
+
+    // Update global state
     sleepProvider.setSleeping(currentStatus);
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Status updated from server'),
+          duration: Duration(seconds: 1),
+        ),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    // Listen to the provider for changes
     final sleepProvider = context.watch<SleepProvider>();
     final bool isSleeping = sleepProvider.isSleeping;
     final settings = sleepProvider.settings;
 
+    // Logic to determine text based on Settings
+    String lightsStatus;
+    String curtainsStatus;
+
+    if (isSleeping) {
+      // When sleeping: check "Auto Lights Off" and "Auto Curtain Close" settings
+      lightsStatus = settings.autoLightsOff ? "OFF" : "ON";
+      curtainsStatus = settings.autoCurtainClose ? "CLOSED" : "OPEN";
+    } else {
+      // When awake: check "Lights On Wake" and "Curtain Open Wake" settings
+      lightsStatus = settings.lightsOnWake ? "ON" : "OFF";
+      curtainsStatus = settings.curtainOpenWake ? "OPEN" : "CLOSED";
+    }
+
     return Scaffold(
-      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: const Text('Sleep Monitor', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.white), // Makes the Menu (Drawer) icon white
+        title: const Text('Smart Sleep Monitor'),
         actions: [
-          IconButton(icon: const Icon(Icons.refresh, color: Colors.white), onPressed: _checkStatus),
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: _checkStatus,
+          ),
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsPage()));
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              await context.read<AuthService>().signOut();
+              if (context.mounted) {
+                context.read<SleepProvider>().clear();
+                Navigator.pushReplacementNamed(context, AppRoutes.login);
+              }
+            },
+          ),
         ],
       ),
-      drawer: Drawer(
-        child: Column(
-          children: [
-            UserAccountsDrawerHeader(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: isSleeping ? [const Color(0xFF0F2027), const Color(0xFF203A43)] : [const Color(0xFF2193b0), const Color(0xFF6dd5ed)],
-                ),
-              ),
-              currentAccountPicture: const CircleAvatar(
-                backgroundColor: Colors.white24,
-                child: Icon(Icons.person, size: 40, color: Colors.white),
-              ),
-              accountName: const Text("Smart User", style: TextStyle(fontWeight: FontWeight.bold)),
-              accountEmail: const Text("Control your smart home"),
-            ),
-            ListTile(
-              leading: const Icon(Icons.settings_outlined, color: Colors.blue),
-              title: const Text('Settings'),
-              subtitle: const Text('Configure auto-actions'),
-              onTap: () {
-                Navigator.pop(context); // Close drawer
-                Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsPage()));
-              },
-            ),
-            const Divider(),
-            const Spacer(), // Pushes logout to the bottom
-            const Divider(),
-            ListTile(
-              leading: const Icon(Icons.logout_rounded, color: Colors.redAccent),
-              title: const Text('Logout', style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold)),
-              onTap: () async {
-                await context.read<AuthService>().signOut();
-                if (mounted) {
-                  context.read<SleepProvider>().clear();
-                  Navigator.pushReplacementNamed(context, AppRoutes.login);
-                }
-              },
-            ),
-            const SizedBox(height: 20),
-          ],
-        ),
-      ),
-      body: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: isSleeping
-                ? [const Color(0xFF0F2027), const Color(0xFF203A43), const Color(0xFF2C5364)]
-                : [const Color(0xFF2193b0), const Color(0xFF6dd5ed)],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
-        child: SafeArea(
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(height: 40),
-              // Main Status Icon
-              TweenAnimationBuilder(
-                tween: Tween<double>(begin: 0.8, end: 1.0),
-                duration: const Duration(seconds: 1),
-                curve: Curves.elasticOut,
-                builder: (context, value, child) {
-                  return Transform.scale(scale: value, child: child);
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(30),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.1),
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white24, width: 2),
-                  ),
-                  child: Icon(
-                    isSleeping ? Icons.bedtime_rounded : Icons.wb_sunny_rounded,
-                    size: 100,
-                    color: isSleeping ? Colors.amberAccent : Colors.orangeAccent,
-                  ),
+              // --- STATUS UI START ---
+              Container(
+                padding: const EdgeInsets.all(40),
+                decoration: BoxDecoration(
+                  // Dark Blue for Sleep, Orange for Awake
+                  color: isSleeping ? const Color(0xFF1A237E) : Colors.orange.shade100,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 20,
+                      offset: const Offset(0, 10),
+                    )
+                  ],
+                ),
+                child: Icon(
+                  // MOON if True, SUN if False
+                  isSleeping ? Icons.bedtime : Icons.wb_sunny,
+                  size: 120,
+                  // Yellow Moon, Orange Sun
+                  color: isSleeping ? Colors.amberAccent : Colors.orange,
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 30),
+
               Text(
-                isSleeping ? "RESTING" : "ACTIVE",
+                isSleeping ? "User is Sleeping" : "User is Awake",
                 style: const TextStyle(
-                  color: Colors.white70,
-                  letterSpacing: 4,
-                  fontWeight: FontWeight.w300,
-                  fontSize: 16,
-                ),
-              ),
-              Text(
-                isSleeping ? "Sleeping" : "Awake",
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 32,
+                  fontSize: 28,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const Spacer(),
-              const Text(
-                "System monitoring active",
-                style: TextStyle(color: Colors.white38, fontSize: 12),
+
+              const SizedBox(height: 50),
+
+              Text(
+                "Auto-refreshes every 5 seconds",
+                style: TextStyle(color: Colors.grey[500]),
               ),
-              const SizedBox(height: 20),
             ],
           ),
         ),
